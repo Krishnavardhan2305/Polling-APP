@@ -4,11 +4,41 @@ import axios from 'axios';
 const Home = () => {
   const [polls, setPolls] = useState([]);
 
-  useEffect(() => {
-    axios.get("http://localhost:8080/api/polls")
+  const userId = localStorage.getItem("userId");
+
+  // ================= FETCH POLLS =================
+  const fetchPolls = () => {
+    axios.get("http://localhost:8080/api/polls/getallpolls")
       .then(res => setPolls(res.data))
       .catch(err => console.log(err));
+  };
+
+  useEffect(() => {
+    fetchPolls();
   }, []);
+
+  // ================= VOTE FUNCTION =================
+  const handleVote = async (optionId) => {
+
+    // ❌ Not logged in
+    if (!userId) {
+      alert("Please login first");
+      return;
+    }
+
+    try {
+      await axios.post(
+        `http://localhost:8080/api/polls/vote/${optionId}`
+      );
+
+      // refresh polls after vote
+      fetchPolls();
+
+    } catch (err) {
+      console.log(err);
+      alert("Error while voting");
+    }
+  };
 
   return (
     <div className="container mt-4">
@@ -19,7 +49,23 @@ const Home = () => {
       ) : (
         polls.map((poll) => (
           <div key={poll.id} className="card p-3 mt-3">
+
+            {/* QUESTION */}
             <h5>{poll.question}</h5>
+
+            {/* OPTIONS */}
+            <div className="mt-2">
+              {poll.options.map((option) => (
+                <button
+                  key={option.id}
+                  className="btn btn-outline-primary d-block my-1"
+                  onClick={() => handleVote(option.id)}
+                >
+                  {option.text} ({option.votes} votes)
+                </button>
+              ))}
+            </div>
+
           </div>
         ))
       )}

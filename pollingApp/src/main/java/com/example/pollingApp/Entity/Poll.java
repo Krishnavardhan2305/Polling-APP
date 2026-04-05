@@ -1,7 +1,10 @@
 package com.example.pollingApp.Entity;
 
-import jakarta.persistence.*;
 import java.util.List;
+
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
+import jakarta.persistence.*;
 
 @Entity
 @Table(name = "polls")
@@ -17,10 +20,9 @@ public class Poll {
     @JoinColumn(name = "user_id")
     private User user;
 
-    @OneToMany(mappedBy = "poll", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "poll", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonManagedReference
     private List<Option> options;
-
-    // Getters and Setters
 
     public Long getId() {
         return id;

@@ -9,6 +9,7 @@ import com.example.pollingApp.Service.UserService;
 
 @RestController
 @RequestMapping("/api/users")
+@CrossOrigin(origins = "http://localhost:5173")
 public class UserController {
 
     @Autowired
