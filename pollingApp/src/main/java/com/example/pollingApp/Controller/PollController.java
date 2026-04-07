@@ -29,9 +29,9 @@ public class PollController {
     }
 
     // ================= VOTE =================
-    @PostMapping("/vote/{optionId}")
-    public String vote(@PathVariable Long optionId) {
-        pollService.vote(optionId);
+    @PostMapping("/vote/{optionId}/{userId}")
+    public String vote(@PathVariable Long optionId, @PathVariable Long userId) {
+        pollService.vote(optionId, userId);
         return "Voted successfully";
     }
 }

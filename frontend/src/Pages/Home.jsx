@@ -20,7 +20,8 @@ const Home = () => {
   // ================= VOTE FUNCTION =================
   const handleVote = async (optionId) => {
 
-    // ❌ Not logged in
+    const userId = localStorage.getItem("userId");
+
     if (!userId) {
       alert("Please login first");
       return;
@@ -28,15 +29,13 @@ const Home = () => {
 
     try {
       await axios.post(
-        `http://localhost:8080/api/polls/vote/${optionId}`
+        `http://localhost:8080/api/polls/vote/${optionId}/${userId}`
       );
 
-      // refresh polls after vote
       fetchPolls();
 
     } catch (err) {
-      console.log(err);
-      alert("Error while voting");
+      alert(err.response?.data || "Already voted!");
     }
   };
 
